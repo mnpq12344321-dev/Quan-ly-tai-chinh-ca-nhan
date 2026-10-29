@@ -90,6 +90,47 @@ nav button{flex:1;font-size:11px;color:var(--mu);font-weight:600}nav button b{di
 .srch{padding:14px 16px 10px}.srch input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;font:inherit}
 .yr{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;align-items:end}.yb{height:90px;display:flex;align-items:flex-end;gap:1px}.yb i{flex:1;border-radius:2px 2px 0 0;min-height:2px}
 .yr small{display:block;text-align:center;font-size:9px;color:var(--mu);margin-top:3px}.yr .cur small{color:var(--tx);font-weight:800}
+
+/* ===== v2 · Ngân hàng hiện đại ===== */
+.si{display:inline-block;vertical-align:middle;flex:none}
+.hero{padding:calc(env(safe-area-inset-top) + 14px) 18px 84px;background:linear-gradient(180deg,#0b172e,#12213f)}
+.hero::after{content:none}
+.hi{display:flex;align-items:center;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.7;font-weight:600;min-height:34px}
+.tg{display:grid;place-items:center;color:#fff}
+.mon{margin:6px 0 14px}.mon button{display:grid;place-items:center;color:#fff}.mon span{font-size:14px;font-weight:700}
+.bc{position:relative;overflow:hidden;border-radius:24px;padding:20px 20px 18px;color:#fff;background:linear-gradient(135deg,#27407a,#16294f 55%,#0f1d3a);border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.bc::before{content:'';position:absolute;width:260px;height:260px;border-radius:50%;right:-90px;top:-110px;background:radial-gradient(circle,rgba(255,178,30,.5),transparent 65%)}
+.bc::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;left:-150px;bottom:-200px;border:1px solid rgba(255,255,255,.1);box-shadow:0 0 0 34px rgba(255,255,255,.03),0 0 0 68px rgba(255,255,255,.02)}
+.bc>*{position:relative;z-index:1}
+.bt{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.av{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
+.bc small{font-size:12px;opacity:.7;letter-spacing:.04em}
+.big{font-size:34px;font-weight:800;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;margin-top:2px}
+.bn{display:flex;justify-content:space-between;margin-top:16px;font-size:11px;letter-spacing:.16em;font-weight:700;color:var(--gold)}
+.card{border-radius:20px;border:1px solid var(--line)}
+.up{margin-top:-54px;box-shadow:0 12px 32px rgba(18,33,63,.12)}
+h3{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);font-weight:700;margin:22px 22px 10px}
+.row3 small{text-transform:uppercase;letter-spacing:.06em;font-size:10.5px}.row3 b{font-size:16px;font-variant-numeric:tabular-nums}
+.row3>div+div{border-left:1px solid var(--line)}
+.w{border:1px solid var(--line);border-radius:20px}.w .wi{background:rgba(255,178,30,.16);color:#b77900}.w b{font-variant-numeric:tabular-nums}
+.it{padding:12px 0}.ic{width:40px;height:40px;border-radius:12px}.it span{font-variant-numeric:tabular-nums;font-size:15px}
+.x{color:var(--mu);display:grid;place-items:center}
+nav{border:1px solid var(--line);border-radius:24px;padding:6px;gap:4px}
+nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;border-radius:18px;font-size:11px}
+nav button b{display:grid;place-items:center}nav button.on{background:var(--ink);color:var(--gold)}
+.fab{display:flex;align-items:center;gap:8px;box-shadow:0 12px 28px rgba(255,178,30,.4)}
+.sh{padding-top:24px}.sh::before{content:'';display:block;width:40px;height:4px;border-radius:2px;background:var(--line);margin:-12px auto 14px}
+.amt{font-variant-numeric:tabular-nums;font-size:44px}
+.chip{display:inline-flex;align-items:center;gap:6px}
+.tile span{color:var(--c);display:block;font-size:0}.tile .si{width:24px;height:24px}
+.seg button{display:flex;justify-content:center;align-items:center;gap:6px}
+.empty{padding:34px 10px}.empty img{display:block;margin:0 auto 12px;width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)}
+.card.nd{display:flex;gap:10px;align-items:center;border-color:#f3d48a}
+.dt{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.up{position:relative;z-index:2}
+.bt{margin-bottom:14px}.big{font-size:32px}.bn{margin-top:12px}
+.hero{padding-bottom:78px}.up{margin-top:-48px}
+.seg button{white-space:nowrap;font-size:13px;gap:5px}
 </style></head><body>
 
 <div id="login">
@@ -101,17 +142,22 @@ nav button{flex:1;font-size:11px;color:var(--mu);font-weight:600}nav button b{di
 </div>
 
 <div id="app" class="hide">
-  <div class="hero"><div class="hi" id="hi"></div><button class="tg" onclick="theme()" aria-label="Đổi giao diện sáng/tối">🌓</button>
-    <div class="mon"><button onclick="mv(-1)" aria-label="Tháng trước">‹</button><span id="mt"></span><button onclick="mv(1)" aria-label="Tháng sau">›</button></div>
-    <small>Tổng số dư các ví</small><div class="big" id="tot">0đ</div><div class="sy" id="sy"></div>
+  <div class="hero">
+    <div class="hi" id="hi"></div><button class="tg" onclick="theme()" aria-label="Đổi giao diện sáng/tối" data-i="moon" data-s="18"></button>
+    <div class="mon"><button onclick="mv(-1)" aria-label="Tháng trước" data-i="chL" data-s="18"></button><span id="mt"></span><button onclick="mv(1)" aria-label="Tháng sau" data-i="chR" data-s="18"></button></div>
+    <div class="bc">
+      <div class="bt"><svg width="42" height="32" viewBox="0 0 42 32"><rect x="1" y="1" width="40" height="30" rx="6" fill="#ffc94d" stroke="#d99a00"/><path d="M1 11h40M1 21h40M15 1v30M27 1v30" stroke="#d99a00" fill="none"/></svg><img class="av" src="icon-192.png" alt=""></div>
+      <small>Tổng số dư các ví</small><div class="big" id="tot">0đ</div><div class="sy" id="sy"></div>
+      <div class="bn"><span>SỔ MÈO</span><span>QUỸ GIA ĐÌNH</span></div>
+    </div>
   </div>
   <div id="view"></div>
-  <button class="fab" onclick="openE()">＋ Ghi chép</button>
+  <button class="fab" onclick="openE()"><span data-i="plus" data-s="20"></span>Ghi chép</button>
   <nav>
-    <button data-t="home" onclick="tab('home')"><b>🏠</b>Trang chủ</button>
-    <button data-t="hist" onclick="tab('hist')"><b>🧾</b>Lịch sử</button>
-    <button data-t="stat" onclick="tab('stat')"><b>📊</b>Thống kê</button>
-    <button onclick="lock()"><b>🔒</b>Khoá</button>
+    <button data-t="home" onclick="tab('home')"><b data-i="home"></b>Trang chủ</button>
+    <button data-t="hist" onclick="tab('hist')"><b data-i="list"></b>Lịch sử</button>
+    <button data-t="stat" onclick="tab('stat')"><b data-i="chart"></b>Thống kê</button>
+    <button onclick="lock()"><b data-i="lock"></b>Khoá</button>
   </nav>
 </div>
 <div id="m"></div>
@@ -124,7 +170,11 @@ const APP_URL=''; // (tuỳ chọn) dán link /exec vào đây; để trống th
 let API=APP_URL||(()=>{try{return localStorage.getItem('meo:api')}catch(e){return null}})();
 const call=(fn,...a)=>fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn,args:a})}).then(r=>r.json());
 const CAT={Chi:['Ăn uống','Đi lại','Mua sắm','Biếu tặng','Ứng trước','Khác'],Thu:['Dạy thêm','Thu nhập khác','Tồn đầu kỳ','Vay nợ','Khác']};
-const IC={'Ăn uống':'🍜','Đi lại':'🛵','Mua sắm':'🛍️','Biếu tặng':'🎁','Ứng trước':'🤝','Khác':'📦','Dạy thêm':'📚','Thu nhập khác':'💰','Tồn đầu kỳ':'🏦','Vay nợ':'🧾','Chuyển':'🔁'};
+const SV={"home": "<path d=\"M3 11l9-8 9 8\"/><path d=\"M5 10v10h14V10\"/><path d=\"M10 20v-6h4v6\"/>", "list": "<path d=\"M8 6h13M8 12h13M8 18h13\"/><circle cx=\"4\" cy=\"6\" r=\"1\"/><circle cx=\"4\" cy=\"12\" r=\"1\"/><circle cx=\"4\" cy=\"18\" r=\"1\"/>", "chart": "<path d=\"M5 20v-7M12 20V4M19 20V9\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 018 0v3\"/>", "plus": "<path d=\"M12 5v14M5 12h14\"/>", "food": "<path d=\"M6 3v8a2 2 0 002 2v8M10 3v8M6 7h4M17 3c-2 2-3 5-3 8h3v10\"/>", "car": "<path d=\"M5 16l1.5-5a2 2 0 011.9-1.4h7.2a2 2 0 011.9 1.4L19 16\"/><rect x=\"3\" y=\"16\" width=\"18\" height=\"4\" rx=\"1.5\"/><path d=\"M7.5 18h.01M16.5 18h.01\"/>", "bag": "<path d=\"M5 8h14l-1 12H6L5 8z\"/><path d=\"M9 8a3 3 0 016 0\"/>", "gift": "<rect x=\"3\" y=\"8\" width=\"18\" height=\"4\" rx=\"1\"/><path d=\"M12 8v13M5 12v8h14v-8M8 8a2.5 2.5 0 110-5c2 0 4 2 4 5M16 8a2.5 2.5 0 100-5c-2 0-4 2-4 5\"/>", "swap": "<path d=\"M17 4l3 3-3 3M20 7H8M7 20l-3-3 3-3M4 17h12\"/>", "box": "<path d=\"M3 7l9-4 9 4v10l-9 4-9-4V7z\"/><path d=\"M3 7l9 4 9-4M12 11v10\"/>", "book": "<path d=\"M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2V5z\"/><path d=\"M8 7h7\"/>", "coins": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 7v10M9.5 14.5c0 1 1 1.5 2.5 1.5s2.5-.6 2.5-1.5-1-1.4-2.5-1.7-2.5-.7-2.5-1.7S10.5 9 12 9s2.5.5 2.5 1.5\"/>", "bank": "<path d=\"M3 9l9-5 9 5M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18\"/>", "receipt": "<path d=\"M6 3h12v18l-3-2-3 2-3-2-3 2V3z\"/><path d=\"M9 8h6M9 12h6\"/>", "card": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2.5\"/><path d=\"M3 10h18M7 15h3\"/>", "cash": "<rect x=\"3\" y=\"6\" width=\"18\" height=\"12\" rx=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/>", "phone": "<rect x=\"7\" y=\"2.5\" width=\"10\" height=\"19\" rx=\"2.5\"/><path d=\"M11 18h2\"/>", "wallet": "<path d=\"M4 7a2 2 0 012-2h11v4\"/><rect x=\"4\" y=\"7\" width=\"16\" height=\"12\" rx=\"2\"/><path d=\"M16 13h.01\"/>", "moon": "<path d=\"M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z\"/>", "warn": "<path d=\"M12 3l10 18H2L12 3z\"/><path d=\"M12 10v5M12 18h.01\"/>", "out": "<path d=\"M7 17L17 7M9 7h8v8\"/>", "in": "<path d=\"M17 7L7 17M15 17H7V9\"/>", "chL": "<path d=\"M15 5l-7 7 7 7\"/>", "chR": "<path d=\"M9 5l7 7-7 7\"/>"};
+const ic=(n,s=20)=>`<svg class="si" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${SV[n]||''}</svg>`;
+document.querySelectorAll('[data-i]').forEach(e=>e.innerHTML=ic(e.dataset.i,e.dataset.s||22));
+let _tv=0;function cnt(el,to){const f=_tv,t0=performance.now();_tv=to;if(f===to)return void(el.textContent=fmt(to));(function s(n){const p=Math.min((n-t0)/600,1),e=1-Math.pow(1-p,3);el.textContent=fmt(Math.round(f+(to-f)*e));if(p<1)requestAnimationFrame(s)})(t0)}
+const IC={'Ăn uống':ic('food'),'Đi lại':ic('car'),'Mua sắm':ic('bag'),'Biếu tặng':ic('gift'),'Ứng trước':ic('swap'),'Khác':ic('box'),'Dạy thêm':ic('book'),'Thu nhập khác':ic('coins'),'Tồn đầu kỳ':ic('bank'),'Vay nợ':ic('receipt'),'Chuyển':ic('swap')};
 const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 let RC=null,recAsked=false,S={sv:'m',q:'',f:'all',tk:null,month:today().slice(0,7),tab:'home',w:[],tx:[],tpl:[]},E,pin='',first=null,mode='in',busy=false;
 const store={get:k=>{try{return localStorage.getItem('meo:'+k)}catch(e){return null}},set:(k,v)=>{try{v==null?localStorage.removeItem('meo:'+k):localStorage.setItem('meo:'+k,v)}catch(e){}}};
@@ -206,24 +256,24 @@ function histList(){const q=S.q.trim().toLowerCase(),T=mergeT().filter(t=>(S.f==
 function tab(t){S.tab=t;render();const v=$('view');v.classList.remove('an');void v.offsetWidth;v.classList.add('an')}
 const CC={'Ăn uống':'#ffb21e','Đi lại':'#3b82f6','Mua sắm':'#ec4899','Biếu tặng':'#8b5cf6','Ứng trước':'#14b8a6','Khác':'#94a3b8','Dạy thêm':'#0f9d78','Thu nhập khác':'#06b6d4','Tồn đầu kỳ':'#6366f1','Vay nợ':'#f97316','Chuyển':'#64748b'};
 const cl=t=>CC[t.k==='Chuyển'?'Chuyển':t.c]||'#94a3b8';
-const wi=n=>/thẻ|bank|ngân|visa/i.test(n)?'💳':/momo|zalo|điện tử/i.test(n)?'📱':/mặt|bóp/i.test(n)?'💵':'👛';
+const wi=n=>ic(/thẻ|bank|ngân|visa/i.test(n)?'card':/momo|zalo|điện tử/i.test(n)?'phone':/mặt|bóp/i.test(n)?'cash':'wallet');
 const sh=n=>n>=1e6?(n/1e6).toFixed(1).replace(/\.0$/,'').replace('.',',')+'tr':n>=1e3?Math.round(n/1e3)+'k':String(n);
 const wd=d=>['CN','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'][new Date(d+'T00:00:00').getDay()];
-const empty=m=>`<div class="empty"><div style="font-size:46px">🐱</div>${m}</div>`;
-const row=t=>`<div class="it" onclick="edT('${esc(t.id)}')"><div class="ic" style="background:${cl(t)}26">${IC[t.k==='Chuyển'?'Chuyển':t.c]||'📦'}</div><div><b>${esc(t.n||t.c||t.k)}</b><small>${(t.k==='Chuyển'?esc(t.w)+' → '+esc(t.w2):esc(t.c)+' · '+esc(t.w))+(t.pend?' · ⏳ chờ đồng bộ':'')}</small></div><span class="${t.k==='Thu'?'in':t.k==='Chi'?'out':''}">${t.k==='Thu'?'+':t.k==='Chi'?'−':''}${nf(t.a)}</span><button class="x" aria-label="Xóa" onclick="event.stopPropagation();del('${esc(t.id)}',this)">✕</button></div>`;
+const empty=m=>`<div class="empty"><img src="icon-192.png" alt="">${m}</div>`;
+const row=t=>`<div class="it" onclick="edT('${esc(t.id)}')"><div class="ic" style="background:${cl(t)}26;color:${cl(t)}">${IC[t.k==='Chuyển'?'Chuyển':t.c]||'📦'}</div><div><b>${esc(t.n||t.c||t.k)}</b><small>${(t.k==='Chuyển'?esc(t.w)+' → '+esc(t.w2):esc(t.c)+' · '+esc(t.w))+(t.pend?' · chờ đồng bộ':'')}</small></div><span class="${t.k==='Thu'?'in':t.k==='Chi'?'out':''}">${t.k==='Thu'?'+':t.k==='Chi'?'−':''}${nf(t.a)}</span><button class="x" aria-label="Xóa" onclick="event.stopPropagation();del('${esc(t.id)}',this)">✕</button></div>`;
 const donut=(e,tot)=>{let acc=0;const R='cx="21" cy="21" r="15.9155" fill="none" stroke-width="6"';
   return `<div class="dn"><svg viewBox="0 0 42 42"><circle ${R} stroke="#eef1f6"/>${e.map(([c,v])=>{const p=v/tot*100,s=`<circle ${R} stroke="${CC[c]||'#94a3b8'}" stroke-dasharray="${p} ${100-p}" stroke-dashoffset="${25-acc}"/>`;acc+=p;return s}).join('')}<text x="21" y="22.6" text-anchor="middle" font-size="5" font-weight="800" fill="#12213f">${sh(tot)}</text></svg></div>`};
 function render(){
   const td=today(),hr=new Date().getHours();
-  $('hi').textContent=(hr<11?'Chào buổi sáng':hr<14?'Chào buổi trưa':hr<18?'Chào buổi chiều':'Chào buổi tối')+' 🐾 · '+wd(td)+', '+td.slice(8)+'/'+td.slice(5,7);
+  $('hi').textContent=(hr<11?'Chào buổi sáng':hr<14?'Chào buổi trưa':hr<18?'Chào buổi chiều':'Chào buổi tối')+' · '+wd(td)+', '+td.slice(8)+'/'+td.slice(5,7);
   $('mt').textContent='Tháng '+S.month.slice(5)+'/'+S.month.slice(0,4);
-  const Q=getQ();$('tot').textContent=fmt(bal().reduce((s,w)=>s+w.b,0));$('sy').textContent=(navigator.onLine?'':'📴 Đang offline  ')+(Q.length?'⏳ '+Q.length+' khoản chờ đồng bộ':'');
+  const Q=getQ();cnt($('tot'),bal().reduce((s,w)=>s+w.b,0));$('sy').textContent=(navigator.onLine?'':'● Offline  ')+(Q.length?'↻ '+Q.length+' khoản chờ đồng bộ':'');
   document.querySelectorAll('nav button[data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
   const T=mergeT(),sum=k=>T.filter(t=>t.k===k).reduce((s,t)=>s+t.a,0),th=sum('Thu'),ch=sum('Chi');let h='';
   const sp={};T.filter(t=>t.k==='Chi').forEach(t=>sp[t.c]=(sp[t.c]||0)+t.a);const B=S.bud||{};
   const bl=CAT.Chi.map(c=>{const b=B[c]||0,u=sp[c]||0,p=b?u/b:0;return `<div class="lg" onclick="bud('${c}')" style="cursor:pointer"><b>${IC[c]} ${c}</b><span>${b?fmt(u)+' / '+fmt(b):'<u>Đặt hạn mức</u>'}</span></div>${b?`<div class="bar"><i style="width:${Math.min(p,1)*100}%;background:${p>=1?'var(--no)':p>=.8?'#f59e0b':'var(--ok)'}"></i></div>`:'<div style="height:12px"></div>'}`}).join('');
   const hot=CAT.Chi.filter(c=>B[c]&&sp[c]/B[c]>=.8).map(c=>`${IC[c]} ${c} ${Math.round(sp[c]/B[c]*100)}%`);
-  const ban=(hot.length?`<div class="card nd" onclick="tab('stat')">⚠️ Ngân sách sắp/đã vượt: ${hot.join(' · ')}</div>`:'')+(hr>=20&&S.month===td.slice(0,7)&&!T.some(t=>t.d===td)?`<div class="card nd" onclick="openE()">🌙 Hôm nay bạn chưa ghi chép khoản nào. Bấm để ghi nhanh nhé!</div>`:'');
+  const ban=(hot.length?`<div class="card nd" onclick="tab('stat')">${ic('warn',18)}Ngân sách sắp/đã vượt: ${hot.join(' · ')}</div>`:'')+(hr>=20&&S.month===td.slice(0,7)&&!T.some(t=>t.d===td)?`<div class="card nd" onclick="openE()">${ic('moon',18)}Hôm nay bạn chưa ghi chép khoản nào. Bấm để ghi nhanh nhé!</div>`:'');
   if(S.tab==='home'){
     const [y,mo]=S.month.split('-').map(Number),nd=new Date(y,mo,0).getDate(),dc=Array(nd).fill(0);
     T.filter(t=>t.k==='Chi').forEach(t=>{const i=+t.d.slice(8)-1;if(i>=0&&i<nd)dc[i]+=t.a});const mx=Math.max(...dc,1);
@@ -232,7 +282,7 @@ function render(){
     <div class="card"><div class="ch"><b>Chi theo ngày</b><small>Tổng ${fmt(ch)}</small></div><div class="sp">${dc.map((v,i)=>`<i class="${td===S.month+'-'+String(i+1).padStart(2,'0')?'t':''}" style="height:${Math.max(v/mx*100,5)}%"></i>`).join('')}</div><div class="spl"><span>1</span><span>${nd}</span></div></div>
     <h3>Gần đây</h3>${T.length?`<div class="card">${T.slice(0,6).map(row).join('')}</div>`:empty('Chưa có giao dịch nào trong tháng này.<br>Bấm “Ghi chép” để thêm khoản đầu tiên.')}`;
   }else if(S.tab==='hist'){
-    h=`<div class="srch"><input id="sq" type="search" placeholder="🔍 Tìm theo diễn giải, mục, ví…" value="${esc(S.q)}" oninput="S.q=this.value;histList()"></div><div class="chips" style="padding:0 16px">${[['all','Tất cả'],['Chi','Chi'],['Thu','Thu'],['Chuyển','Chuyển ví']].map(([k,l])=>`<button class="chip ${S.f===k?'on':''}" onclick="S.f='${k}';render()">${l}</button>`).join('')}</div><div id="hl"></div>`;
+    h=`<div class="srch"><input id="sq" type="search" placeholder="Tìm theo diễn giải, mục, ví…" value="${esc(S.q)}" oninput="S.q=this.value;histList()"></div><div class="chips" style="padding:0 16px">${[['all','Tất cả'],['Chi','Chi'],['Thu','Thu'],['Chuyển','Chuyển ví']].map(([k,l])=>`<button class="chip ${S.f===k?'on':''}" onclick="S.f='${k}';render()">${l}</button>`).join('')}</div><div id="hl"></div>`;
   }else{
     const lst=m=>{const e=Object.entries(m).sort((a,b)=>b[1]-a[1]),tot=e.reduce((s,x)=>s+x[1],0);
       if(!tot)return empty('Chưa có dữ liệu');
@@ -243,7 +293,7 @@ function render(){
       if(!Y)h=tg+empty('Đang tải báo cáo năm…');
       else{const mi=+S.month.slice(5)-1,mx=Math.max(...Y.m.flatMap(x=>[x.t,x.c]),1),tt=Y.m.reduce((s,x)=>s+x.t,0),tc=Y.m.reduce((s,x)=>s+x.c,0),cur=Y.m[mi].c,prev=mi?Y.m[mi-1].c:0,dl=prev?Math.round((cur-prev)/prev*100):null;
         h=tg+`<div class="card" style="margin-top:14px"><div class="row3"><div><small>Thu năm ${Y.y}</small><b class="in">${fmt(tt)}</b></div><div><small>Chi năm</small><b class="out">${fmt(tc)}</b></div><div><small>Còn lại</small><b>${fmt(tt-tc)}</b></div></div></div>
-        <h3>So sánh các tháng</h3><div class="card"><div class="yr">${Y.m.map((x,i)=>`<div class="${i===mi?'cur':''}"><div class="yb"><i style="height:${x.t/mx*100}%;background:var(--ok)"></i><i style="height:${x.c/mx*100}%;background:var(--no)"></i></div><small>T${i+1}</small></div>`).join('')}</div><div class="spl"><span>🟩 Thu</span><span>🟥 Chi</span></div><p class="hint" style="margin-top:10px">${dl===null?'Chưa có dữ liệu tháng trước để so sánh.':`Chi tháng ${mi+1}: <b>${fmt(cur)}</b>, ${dl>=0?'tăng':'giảm'} <b class="${dl>=0?'out':'in'}">${Math.abs(dl)}%</b> so với tháng ${mi}.`}</p></div>
+        <h3>So sánh các tháng</h3><div class="card"><div class="yr">${Y.m.map((x,i)=>`<div class="${i===mi?'cur':''}"><div class="yb"><i style="height:${x.t/mx*100}%;background:var(--ok)"></i><i style="height:${x.c/mx*100}%;background:var(--no)"></i></div><small>T${i+1}</small></div>`).join('')}</div><div class="spl"><span><i class="dt" style="background:var(--ok)"></i>Thu</span><span><i class="dt" style="background:var(--no)"></i>Chi</span></div><p class="hint" style="margin-top:10px">${dl===null?'Chưa có dữ liệu tháng trước để so sánh.':`Chi tháng ${mi+1}: <b>${fmt(cur)}</b>, ${dl>=0?'tăng':'giảm'} <b class="${dl>=0?'out':'in'}">${Math.abs(dl)}%</b> so với tháng ${mi}.`}</p></div>
         <h3>Chi theo mục đích cả năm</h3><div class="card">${lst(Y.cat)}</div>`}
     }else h=tg+`<h3 style="margin-top:14px">Chi theo mục đích</h3><div class="card">${by('Chi')}</div><h3>Ngân sách tháng</h3><div class="card">${bl}</div><h3>Thu theo nguồn</h3><div class="card">${by('Thu')}</div>`;
   }
@@ -262,7 +312,7 @@ function sheet(){
   const tp=S.tpl.filter(t=>t.k===E.k);
   const wc=sel=>S.w.map((w,i)=>`<button class="chip ${w.n===E[sel]?'on':''}" onclick="E.${sel}=S.w[${i}].n;sheet()">${wi(w.n)} ${esc(w.n)}</button>`).join('');
   $('m').innerHTML=`<div class="ov" onclick="if(event.target===this)closeE()"><div class="sh">
-  <div class="seg">${[['Chi','Chi ra','💸'],['Thu','Thu vào','💰'],['Chuyển','Chuyển ví','🔁']].map(([k,l,i])=>`<button class="${E.k===k?'on':''}" onclick="setK('${k}')">${i} ${l}</button>`).join('')}</div>
+  <div class="seg">${[['Chi','Chi ra',ic('out',16)],['Thu','Thu vào',ic('in',16)],['Chuyển','Chuyển ví',ic('swap',16)]].map(([k,l,i])=>`<button class="${E.k===k?'on':''}" onclick="setK('${k}')">${i} ${l}</button>`).join('')}</div>
   <div class="amt ${E.k}" id="amt">${E.a?nf(+E.a):'0'}đ</div>
   ${tp.length?`<div class="chips">${tp.map((t,i)=>`<button class="chip t" onclick="useT(${i})">${IC[t.c]||''} ${esc(t.n)} · ${nf(t.a)}</button>`).join('')}</div>`:''}
   <div class="kp">${['1','2','3','4','5','6','7','8','9','000','0','⌫'].map(k=>`<button onclick="kp('${k}')">${k}</button>`).join('')}</div>
@@ -275,8 +325,8 @@ function sheet(){
 const modal=x=>$('m').innerHTML=`<div class="ov"><div class="sh">${x}</div></div>`;
 function forgot(){modal(`<h3 style="margin:4px 0 6px">Khôi phục PIN</h3><p class="hint">Nhập mã khôi phục 10 ký tự bạn đã lưu khi tạo PIN.</p><div class="f"><input id="rc" placeholder="XXXXX-XXXXX" autocapitalize="characters" autocomplete="off"></div><button class="save" onclick="goRec()">Tiếp tục</button><button class="lnk" onclick="closeE()">Hủy</button><p class="hint">Mất mã? Mở Apps Script, chạy hàm <b>resetPin</b>, rồi bấm nút dưới đây để tạo PIN mới.</p><button class="lnk" onclick="closeE();lock(true)">Tôi đã chạy resetPin</button>`)}
 function goRec(){const c=$('rc').value.trim();if(c.replace(/[^A-Za-z0-9]/g,'').length<10)return toast('Mã gồm 10 ký tự');RC=c;closeE();mode='new';first=null;pin='';dots();$('lm').textContent='Tạo PIN mới (4 số)';$('fg').classList.add('hide')}
-function showRec(c){modal(`<h3 style="margin:4px 0 6px">🔑 Mã khôi phục PIN</h3><p class="hint">Chép mã này vào nơi an toàn (ghi chú, giấy). Mã chỉ hiện <b>một lần</b>, dùng khi bạn quên PIN.</p><div class="rc">${c.slice(0,5)}-${c.slice(5)}</div><button class="save" onclick="closeE()">Đã chép lại</button>`)}
-function chkRec(){if(S.tk&&S.hasRec===false&&!recAsked&&$('m').innerHTML===''&&!$('app').classList.contains('hide')){recAsked=true;modal(`<h3 style="margin:4px 0 6px">🔑 Tạo mã khôi phục PIN</h3><p class="hint">Sổ của bạn chưa có mã khôi phục. Tạo ngay để lỡ quên PIN vẫn lấy lại được.</p><button class="save" onclick="mkRec()">Tạo mã khôi phục</button><button class="lnk" onclick="closeE()">Để sau</button>`)}}
+function showRec(c){modal(`<h3 style="margin:4px 0 6px">Mã khôi phục PIN</h3><p class="hint">Chép mã này vào nơi an toàn (ghi chú, giấy). Mã chỉ hiện <b>một lần</b>, dùng khi bạn quên PIN.</p><div class="rc">${c.slice(0,5)}-${c.slice(5)}</div><button class="save" onclick="closeE()">Đã chép lại</button>`)}
+function chkRec(){if(S.tk&&S.hasRec===false&&!recAsked&&$('m').innerHTML===''&&!$('app').classList.contains('hide')){recAsked=true;modal(`<h3 style="margin:4px 0 6px">Tạo mã khôi phục PIN</h3><p class="hint">Sổ của bạn chưa có mã khôi phục. Tạo ngay để lỡ quên PIN vẫn lấy lại được.</p><button class="save" onclick="mkRec()">Tạo mã khôi phục</button><button class="lnk" onclick="closeE()">Để sau</button>`)}}
 async function mkRec(){try{const r=await call('api',S.tk,'rec',{month:S.month});if(r.err)return toast(r.err);apply(r);if(r.newRec)showRec(r.newRec);else closeE()}catch(e){toast('Cần có mạng để tạo mã')}}
 function closeE(){$('m').innerHTML=''}
 function kp(k){E.a=k==='⌫'?E.a.slice(0,-1):(E.a+k).replace(/^0+/,'').slice(0,12);$('amt').textContent=(E.a?nf(+E.a):'0')+'đ'}
