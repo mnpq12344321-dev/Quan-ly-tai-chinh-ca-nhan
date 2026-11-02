@@ -184,6 +184,9 @@ nav button.on{background:linear-gradient(135deg,#1c2f58,#12213f);box-shadow:0 6p
 .w{position:relative}.w::after{content:'✎';position:absolute;top:5px;right:9px;font-size:11px;color:var(--mu);opacity:.55}
 .qa{margin:0 0 4px}.qh{font-size:12.5px;color:var(--mu);margin:0 2px 8px;line-height:1.45}.qh b{color:var(--tx)}
 .ins .r{display:flex;gap:10px;padding:9px 0;font-size:13.5px;line-height:1.45}.ins .r+.r{border-top:1px solid var(--line)}.ins .ri{color:#d99a00;flex:none;margin-top:1px}.ins b.out{color:var(--no)}.ins b.in{color:var(--ok)}
+.vtag{text-align:center;font-size:11.5px;color:var(--mu);margin:6px 0 18px}
+.sp{font-size:12.5px;color:var(--ok);font-weight:600;margin:-4px 4px 8px}
+input[data-money]{font-variant-numeric:tabular-nums;font-weight:600}
 </style></head><body>
 
 <div id="login">
@@ -191,7 +194,7 @@ nav button.on{background:linear-gradient(135deg,#1c2f58,#12213f);box-shadow:0 6p
   <h1>Sổ Mèo</h1>
   <div id="lm">Đang kết nối…</div>
   <div class="dots" id="dots"><i>🐾</i><i>🐾</i><i>🐾</i><i>🐾</i></div>
-  <div class="pad" id="pad"></div><button class="fg hide" id="fg" onclick="forgot()">Quên PIN?</button>
+  <div class="pad" id="pad"></div><button class="fg hide" id="fg" onclick="forgot()">Quên PIN?</button><div class="vtag" id="vl" style="color:#fff;opacity:.45"></div>
 </div>
 
 <div id="app" class="hide">
@@ -263,12 +266,12 @@ let D,A,B,PY;
 const gsaved=g=>g.saved+getQ().filter(q=>q.k==='Tích lũy'&&q.c===g.id&&!S.tx.some(x=>x.id===q.id)).reduce((s,q)=>s+q.a,0);
 function goalM(id){const g=S.goals.find(x=>x.id===id)||{};modal(`<h3 style="margin:4px 0 10px">${id?'Sửa mục tiêu':'Mục tiêu mới'}</h3>
 <div class="f"><input id="gn" placeholder="Tên (vd: Mua nhẫn cưới)" maxlength="60" value="${esc(g.name||'')}"></div>
-<div class="lb">Số tiền cần (đ)</div><div class="f"><input id="gt" type="number" inputmode="numeric" value="${g.target||''}" placeholder="20000000"></div>
+<div class="lb">Số tiền cần (đ)</div><div class="f"><input id="gt" type="text" inputmode="numeric" data-money value="${g.target||''}" placeholder="20.000.000"></div>
 <div class="lb">Hạn hoàn thành (không bắt buộc)</div><div class="f"><input id="gd" type="date" value="${g.due||''}"></div>
-<div class="lb">Đã có sẵn (đ)</div><div class="f"><input id="gb" type="number" inputmode="numeric" value="${g.base||''}" placeholder="0"></div>
+<div class="lb">Đã có sẵn (đ)</div><div class="f"><input id="gb" type="text" inputmode="numeric" data-money value="${g.base||''}" placeholder="0"></div>
 <button class="save" onclick="goalS('${id||''}')">Lưu</button>${id?`<button class="lnk" style="color:var(--no)" onclick="goalD('${id}')">Xóa mục tiêu (hoàn tiền về ví)</button>`:''}<button class="lnk" onclick="closeE()">Hủy</button>`)}
-function goalS(id){const name=$('gn').value.trim(),target=Math.round(+$('gt').value||0);if(!name||target<=0)return toast('Nhập tên và số tiền cần');
-  const old=S.goals.find(x=>x.id===id),g={id:id||uid(),name,target,due:$('gd').value||'',base:Math.round(+$('gb').value||0)};
+function goalS(id){const name=$('gn').value.trim(),target=mval('gt');if(!name||target<=0)return toast('Nhập tên và số tiền cần');
+  const old=S.goals.find(x=>x.id===id),g={id:id||uid(),name,target,due:$('gd').value||'',base:mval('gb')};
   g.saved=old?old.saved-old.base+g.base:g.base;S.goals=old?S.goals.map(x=>x.id===g.id?g:x):[...S.goals,g];
   closeE();render();persist();toast('Đã lưu mục tiêu');
   qop('goal',{op:'set',id:g.id,item:g})}
@@ -276,11 +279,11 @@ function goalD(id){closeE();S.goals=S.goals.filter(x=>x.id!==id);setQ(getQ().fil
   qop('goal',{op:'del',id});toast('Đã xóa mục tiêu, tiền sẽ hoàn về ví sau khi đồng bộ')}
 function dw(i){D.w=S.w[i].n;document.querySelectorAll('#dw .chip').forEach((b,j)=>b.classList.toggle('on',j===i))}
 function dep(id){if(noW())return;const g=S.goals.find(x=>x.id===id);D={id,w:S.w[0].n,d:today()};
-  modal(`<h3 style="margin:4px 0 6px">Nạp vào “${esc(g.name)}”</h3><p class="hint">Còn thiếu ${fmt(Math.max(0,g.target-gsaved(g)))}</p><div class="f"><input id="da" type="number" inputmode="numeric" placeholder="Số tiền (đ)"></div><div class="lb">Trừ từ ví</div><div class="chips" id="dw">${S.w.map((w,i)=>`<button class="chip ${i?'':'on'}" onclick="dw(${i})">${wi(w.n)} ${esc(w.n)}</button>`).join('')}</div><button class="save" onclick="depS()">Nạp tiền</button><button class="lnk" onclick="closeE()">Hủy</button>`)}
-function depS(){const a=Math.round(+$('da').value||0),g=S.goals.find(x=>x.id===D.id);if(a<=0)return toast('Nhập số tiền');
+  modal(`<h3 style="margin:4px 0 6px">Nạp vào “${esc(g.name)}”</h3><p class="hint">Còn thiếu ${fmt(Math.max(0,g.target-gsaved(g)))}</p><div class="f"><input id="da" type="text" inputmode="numeric" data-money placeholder="Số tiền (đ)"></div><div class="lb">Trừ từ ví</div><div class="chips" id="dw">${S.w.map((w,i)=>`<button class="chip ${i?'':'on'}" onclick="dw(${i})">${wi(w.n)} ${esc(w.n)}</button>`).join('')}</div><button class="save" onclick="depS()">Nạp tiền</button><button class="lnk" onclick="closeE()">Hủy</button>`)}
+function depS(){const a=mval('da'),g=S.goals.find(x=>x.id===D.id);if(a<=0)return toast('Nhập số tiền');
   const wb=(bal().find(w=>w.n===D.w)||{b:0}).b;if(a>wb)return toast('Ví '+D.w+' không đủ tiền');
   setQ([...getQ(),{id:uid(),k:'Tích lũy',a,c:D.id,w:D.w,w2:'',d:D.d,n:'Nạp “'+g.name+'”'}]);closeE();render();toast('Đã nạp vào mục tiêu');sync()}
-function astRead(){A.name=$('an').value;A.qty=$('aq').value;A.unit=$('au').value;const p=$('ap');if(p)A.price=p.value;const c=$('ac');if(c)A.cost=c.value;A.note=$('ano').value}
+function astRead(){A.name=$('an').value;A.qty=$('aq').value;A.unit=$('au').value;const p=$('ap');if(p)A.price=String(mval('ap')||'');const c=$('ac');if(c)A.cost=String(mval('ac')||'');A.note=$('ano').value}
 function astG(k){astRead();A.src=k;astV()}
 function astT(i){astRead();const t=ATK[i];if(!A.unit||A.unit===AT[A.type][1])A.unit=AT[t][1];A.type=t;if(t!=='Vàng')A.src='';else if(!A.id&&!A.src)A.src='9999';astV()}
 function astM(id){const a=S.assets.find(x=>x.id===id);A=a?{...a}:{id:'',type:'Vàng',unit:'chỉ',src:'9999'};astV()}
@@ -288,8 +291,8 @@ function astV(){modal(`<h3 style="margin:4px 0 10px">${A.id?'Sửa tài sản':'
 <div class="f"><input id="an" placeholder="Tên (vd: Vàng nhẫn tròn)" maxlength="60" value="${esc(A.name||'')}"></div>
 <div class="f"><input id="aq" type="number" inputmode="decimal" step="any" placeholder="Số lượng" value="${A.qty||''}"><input id="au" placeholder="Đơn vị" maxlength="12" value="${esc(A.unit||'')}" style="max-width:110px"></div>
 ${A.type==='Vàng'?`<div class="lb">Cập nhật giá</div><div class="chips">${[['9999','Theo vàng 9999'],['980','Theo vàng 980'],['','Nhập tay']].map(([k,l])=>`<button class="chip ${(A.src||'')===k?'on':''}" onclick="astG('${k}')">${l}</button>`).join('')}</div>`:''}
-${A.src?`<p class="hint">Giá tự cập nhật theo bảng giá Kim Hoàn Cà Mau (giá tiệm mua vào, đồng/chỉ)${S.gold&&S.gold.p&&S.gold.p[A.src]?': <b>'+nf(S.gold.p[A.src].buy)+'đ</b>':''}.</p>`:`<div class="lb">Giá hiện tại của 1 ${esc(A.unit||'đơn vị')} (đ)</div><div class="f"><input id="ap" type="number" inputmode="numeric" placeholder="Giá 1 ${esc(A.unit||'đơn vị')}" value="${A.price||''}"></div>${A.type==='Vàng'?'<p class="hint">Nhập giá 1 chỉ vàng. 1 lượng = 10 chỉ.</p>':''}`}
-<div class="lb">Giá lúc mua / 1 ${esc(A.unit||'đơn vị')} (đ) – để xem lãi/lỗ</div><div class="f"><input id="ac" type="number" inputmode="numeric" placeholder="Không bắt buộc" value="${A.cost||''}"></div>
+${A.src?`<p class="hint">Giá tự cập nhật theo bảng giá Kim Hoàn Cà Mau (giá tiệm mua vào, đồng/chỉ)${S.gold&&S.gold.p&&S.gold.p[A.src]?': <b>'+nf(S.gold.p[A.src].buy)+'đ</b>':''}.</p>`:`<div class="lb">Giá hiện tại của 1 ${esc(A.unit||'đơn vị')} (đ)</div><div class="f"><input id="ap" type="text" inputmode="numeric" data-money placeholder="Giá 1 ${esc(A.unit||'đơn vị')}" value="${A.price||''}"></div>${A.type==='Vàng'?'<p class="hint">Nhập giá 1 chỉ vàng. 1 lượng = 10 chỉ.</p>':''}`}
+<div class="lb">Giá lúc mua / 1 ${esc(A.unit||'đơn vị')} (đ) – để xem lãi/lỗ</div><div class="f"><input id="ac" type="text" inputmode="numeric" data-money placeholder="Không bắt buộc" value="${A.cost||''}"></div>
 <div class="f"><input id="ano" placeholder="Ghi chú (không bắt buộc)" maxlength="100" value="${esc(A.note||'')}"></div>
 <button class="save" onclick="astS()">Lưu</button>${A.id?'<button class="lnk" style="color:var(--no)" onclick="astD()">Xóa tài sản</button>':''}<button class="lnk" onclick="closeE()">Hủy</button>`)}
 function astS(){astRead();const a={id:A.id||uid(),name:A.name.trim(),type:A.type,qty:+A.qty||0,unit:A.unit.trim(),price:A.src&&S.gold&&S.gold.p&&S.gold.p[A.src]?S.gold.p[A.src].buy:Math.round(+A.price||0),note:A.note.trim(),cost:Math.round(+A.cost||0),src:A.type==='Vàng'?(A.src||''):''};
@@ -299,12 +302,12 @@ function astS(){astRead();const a={id:A.id||uid(),name:A.name.trim(),type:A.type
 function astD(){const id=A.id;closeE();S.assets=S.assets.filter(x=>x.id!==id);render();persist();qop('ast',{op:'del',id})}
 const dpend=d=>d.paid+getQ().filter(q=>q.c===d.id&&((d.type==='thu'&&q.k==='Nợ+')||(d.type==='tra'&&q.k==='Nợ-'))&&!S.tx.some(x=>x.id===q.id)).reduce((s,q)=>s+q.a,0);
 function debtM(id){if(noW())return;const d=S.debts.find(x=>x.id===id);B=d?{...d}:{id:'',type:'thu',w:S.w[0].n};debtV()}
-function debtRead(){B.who=$('dn').value;B.amount=$('dam').value;B.due=$('dd').value;B.note=$('dnt').value}
+function debtRead(){B.who=$('dn').value;B.amount=mval('dam');B.due=$('dd').value;B.note=$('dnt').value}
 function debtW(i){debtRead();B.w=['',...S.w.map(w=>w.n)][i];debtV()}
 function debtV(){const tra=B.type==='tra';modal(`<h3 style="margin:4px 0 10px">${B.id?'Sửa khoản nợ':'Khoản nợ mới'}</h3>
 ${B.id?'':`<div class="chips">${[['thu','Người khác nợ mình'],['tra','Mình nợ người khác']].map(([k,l])=>`<button class="chip ${B.type===k?'on':''}" onclick="debtRead();B.type='${k}';debtV()">${l}</button>`).join('')}</div>`}
 <div class="f"><input id="dn" placeholder="${tra?'Mượn của ai?':'Ai đang nợ?'} (vd: Lớp 12A2)" maxlength="60" value="${esc(B.who||'')}"></div>
-<div class="lb">Số tiền (đ)</div><div class="f"><input id="dam" type="number" inputmode="numeric" value="${B.amount||''}"></div>
+<div class="lb">Số tiền (đ)</div><div class="f"><input id="dam" type="text" inputmode="numeric" data-money value="${B.amount||''}"></div>
 <div class="lb">Hạn trả (không bắt buộc)</div><div class="f"><input id="dd" type="date" value="${B.due||''}"></div>
 <div class="f"><input id="dnt" placeholder="Ghi chú (không bắt buộc)" maxlength="100" value="${esc(B.note||'')}"></div>
 ${B.id?'':`<div class="lb">${tra?'Tiền đã vào ví nào?':'Tiền đã đưa đi từ ví nào?'}</div><div class="chips">${['',...S.w.map(w=>w.n)].map((n,i)=>`<button class="chip ${(B.w||'')===n?'on':''}" onclick="debtW(${i})">${n?wi(n)+' '+esc(n):'Không qua ví'}</button>`).join('')}</div>`}
@@ -319,15 +322,15 @@ function debtD(id){closeE();S.debts=S.debts.filter(x=>x.id!==id);setQ(getQ().fil
   qop('debt',{op:'del',id});toast('Đã xóa khoản nợ, tiền sẽ hoàn về ví sau khi đồng bộ')}
 function pw(i){PY.w=S.w[i].n;document.querySelectorAll('#pw .chip').forEach((b,j)=>b.classList.toggle('on',j===i))}
 function payM(id){if(noW())return;const d=S.debts.find(x=>x.id===id);PY={id,w:S.w[0].n};const rem=Math.max(0,d.amount-dpend(d));
-  modal(`<h3 style="margin:4px 0 6px">${d.type==='thu'?'Thu nợ từ':'Trả nợ cho'} “${esc(d.who)}”</h3><p class="hint">Còn ${fmt(rem)}</p><div class="f"><input id="pa" type="number" inputmode="numeric" value="${rem||''}"></div><div class="lb">${d.type==='thu'?'Nhận vào ví':'Trừ từ ví'}</div><div class="chips" id="pw">${S.w.map((w,i)=>`<button class="chip ${i?'':'on'}" onclick="pw(${i})">${wi(w.n)} ${esc(w.n)}</button>`).join('')}</div><button class="save" onclick="payS()">Ghi nhận</button><button class="lnk" onclick="closeE()">Hủy</button>`)}
-function payS(){const d=S.debts.find(x=>x.id===PY.id),a=Math.round(+$('pa').value||0),rem=Math.max(0,d.amount-dpend(d));if(a<=0)return toast('Nhập số tiền');if(a>rem)return toast('Vượt quá số còn nợ');
+  modal(`<h3 style="margin:4px 0 6px">${d.type==='thu'?'Thu nợ từ':'Trả nợ cho'} “${esc(d.who)}”</h3><p class="hint">Còn ${fmt(rem)}</p><div class="f"><input id="pa" type="text" inputmode="numeric" data-money value="${rem||''}"></div><div class="lb">${d.type==='thu'?'Nhận vào ví':'Trừ từ ví'}</div><div class="chips" id="pw">${S.w.map((w,i)=>`<button class="chip ${i?'':'on'}" onclick="pw(${i})">${wi(w.n)} ${esc(w.n)}</button>`).join('')}</div><button class="save" onclick="payS()">Ghi nhận</button><button class="lnk" onclick="closeE()">Hủy</button>`)}
+function payS(){const d=S.debts.find(x=>x.id===PY.id),a=mval('pa'),rem=Math.max(0,d.amount-dpend(d));if(a<=0)return toast('Nhập số tiền');if(a>rem)return toast('Vượt quá số còn nợ');
   if(d.type==='tra'){const wb=(bal().find(w=>w.n===PY.w)||{b:0}).b;if(a>wb)return toast('Ví '+PY.w+' không đủ tiền')}
   setQ([...getQ(),{id:uid(),k:d.type==='thu'?'Nợ+':'Nợ-',a,c:d.id,w:PY.w,w2:'',d:today(),n:(d.type==='thu'?'Thu nợ từ “':'Trả nợ cho “')+d.who+'”'}]);closeE();render();toast('Đã ghi nhận');sync()}
 let AD;
 function adjM(i){const w=bal()[i];if(!w)return;AD={n:w.n,b:w.b};
-  modal(`<h3 style="margin:4px 0 6px">Chỉnh số dư “${esc(w.n)}”</h3><p class="hint">Số dư trong app: <b>${fmt(w.b)}</b>. Nhập số dư <b>thực tế</b> (xem trong app ngân hàng hoặc đếm tiền mặt), app tự ghi khoản điều chỉnh. Khoản này <b>không tính là thu hay chi</b>.</p><div class="f"><input id="ab" type="number" inputmode="numeric" placeholder="Số dư thực tế (đ)" oninput="adjP()"></div><p class="hint" id="ap2"></p><button class="save" onclick="adjS()">Lưu số dư</button><button class="lnk" onclick="closeE()">Hủy</button>`)}
-function adjP(){const v=$('ab').value,d=Math.round(+v)-AD.b;$('ap2').innerHTML=v===''?'':d===0?'Đã khớp, không cần điều chỉnh.':`Chênh lệch: <b class="${d>0?'in':'out'}">${d>0?'+':'−'}${nf(Math.abs(d))}đ</b>`}
-function adjS(){const v=$('ab').value;if(v==='')return toast('Nhập số dư thực tế');const d=Math.round(+v)-AD.b;if(!d){closeE();return toast('Số dư đã khớp')}
+  modal(`<h3 style="margin:4px 0 6px">Chỉnh số dư “${esc(w.n)}”</h3><p class="hint">Số dư trong app: <b>${fmt(w.b)}</b>. Nhập số dư <b>thực tế</b> (xem trong app ngân hàng hoặc đếm tiền mặt), app tự ghi khoản điều chỉnh. Khoản này <b>không tính là thu hay chi</b>.</p><div class="f"><input id="ab" type="text" inputmode="numeric" data-money placeholder="Số dư thực tế (đ)" oninput="adjP()"></div><p class="hint" id="ap2"></p><button class="save" onclick="adjS()">Lưu số dư</button><button class="lnk" onclick="closeE()">Hủy</button>`)}
+function adjP(){const v=$('ab').value,d=numOf(v)-AD.b;$('ap2').innerHTML=v===''?'':d===0?'Đã khớp, không cần điều chỉnh.':`Chênh lệch: <b class="${d>0?'in':'out'}">${d>0?'+':'−'}${nf(Math.abs(d))}đ</b>`}
+function adjS(){const v=$('ab').value;if(v==='')return toast('Nhập số dư thực tế');const d=numOf(v)-AD.b;if(!d){closeE();return toast('Số dư đã khớp')}
   setQ([...getQ(),{id:uid(),k:d>0?'Chỉnh+':'Chỉnh-',a:Math.abs(d),c:'',w:AD.n,w2:'',d:today(),n:'Điều chỉnh số dư'}]);closeE();render();toast('Đã chỉnh số dư');sync()}
 const addD=n=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4+n*864e5).toISOString().slice(0,10);
 const QR=[[/ăn sáng|bữa sáng|bánh mì|xôi|điểm tâm/,'Ăn sáng'],[/ăn trưa|bữa trưa|cơm trưa/,'Ăn trưa'],[/ăn tối|bữa tối|cơm tối/,'Ăn tối'],
@@ -463,8 +466,8 @@ function mv(d){let [y,m]=S.month.split('-').map(Number);m+=d;if(m<1){m=12;y--}if
 function edT(id){const t=mergeT().find(x=>x.id===id);if(!t)return;if(KX.has(t.k)&&t.k!=='Chuyển')return toast('Khoản thuộc Tích lũy/Sổ nợ: xóa đi rồi ghi lại nếu cần');E={k:t.k,a:String(t.a),c:t.c||(CAT[t.k]?CAT[t.k][0]:''),w:t.w,w2:t.w2||(S.w.find(w=>w.n!==t.w)||S.w[0]).n,d:t.d,n:t.n||'',edit:id};sheet()}
 function setSV(k){S.sv=k;S.yr=k==='y'?(S.ycache[+S.month.slice(0,4)]||null):null;render();if(k==='y')loadY()}
 async function loadY(){const y=+S.month.slice(0,4);try{const r=await call('api',S.tk,'year',{y});S.ycache[r.y]=r;if(S.sv==='y'&&+S.month.slice(0,4)===r.y){S.yr=r;render()}}catch(e){if(S.sv==='y'&&!S.yr)toast('Cần có mạng để xem báo cáo năm')}}
-function bud(c){modal(`<h3 style="margin:4px 0 6px">${IC[c]} Ngân sách ${c}</h3><p class="hint">Hạn mức chi mỗi tháng (đ). Để 0 hoặc bỏ trống để xóa.</p><div class="f"><input id="bv" type="number" inputmode="numeric" value="${(S.bud||{})[c]||''}" placeholder="Ví dụ 1500000"></div><button class="save" onclick="sbud('${c}')">Lưu</button><button class="lnk" onclick="closeE()">Hủy</button>`)}
-async function sbud(c){const v=+$('bv').value||0;S.bud=S.bud||{};if(v>0)S.bud[c]=v;else delete S.bud[c];closeE();render();persist();toast('Đã lưu ngân sách');
+function bud(c){modal(`<h3 style="margin:4px 0 6px">${IC[c]} Ngân sách ${c}</h3><p class="hint">Hạn mức chi mỗi tháng (đ). Để 0 hoặc bỏ trống để xóa.</p><div class="f"><input id="bv" type="text" inputmode="numeric" data-money value="${(S.bud||{})[c]||''}" placeholder="Ví dụ 1.500.000"></div><button class="save" onclick="sbud('${c}')">Lưu</button><button class="lnk" onclick="closeE()">Hủy</button>`)}
+async function sbud(c){const v=mval('bv');S.bud=S.bud||{};if(v>0)S.bud[c]=v;else delete S.bud[c];closeE();render();persist();toast('Đã lưu ngân sách');
   qop('bud',{c,v})}
 function catChips(){const T=mergeT().filter(t=>!KX.has(t.k)&&(S.f==='all'||t.k===S.f));window._gs=['',...new Set(T.map(t=>grp(t.c)))];
   const subs=S.g?[...new Set(T.filter(t=>grp(t.c)===S.g).map(t=>t.c))]:[];window._ss=['',...subs];
@@ -478,6 +481,7 @@ function tab(t){S.tab=t;if(t==='ast'&&!S.gp&&(!S.gold||Date.now()-(S.gold.at||0)
 const CC0={'Ăn uống':'#ffb21e','Đi lại':'#3b82f6','Mua sắm':'#ec4899','Nhà cửa':'#0ea5e9','Sức khỏe':'#ef4444','Giải trí':'#d946ef','Biếu tặng':'#8b5cf6','Ứng trước':'#14b8a6','Khác':'#94a3b8','Lương':'#10b981','Dạy thêm':'#0f9d78','Thưởng & lì xì':'#f59e0b','Thu nhập khác':'#06b6d4','Tồn đầu kỳ':'#6366f1','Vay nợ':'#f97316','Chuyển':'#64748b','Tích lũy':'#14b8a6','Nợ+':'#f97316','Nợ-':'#f97316','Chỉnh+':'#64748b','Chỉnh-':'#64748b'};
 const CC=new Proxy(CC0,{get:(o,k)=>o[k]||o[PAR[k]]});
 Object.assign(CC0,{'Tiền trong ví':'#3b82f6','Quỹ mục tiêu':'#ffb21e','Vàng':'#d99a00','Ngoại tệ':'#10b981','Tiền gửi':'#0ea5e9','Chứng khoán':'#8b5cf6','Bất động sản':'#06b6d4','Xe':'#ef4444','Phải thu':'#f97316'});
+const APP_V=19;
 const KX=new Set(['Chuyển','Tích lũy','Nợ+','Nợ-','Chỉnh+','Chỉnh-']);
 const cl=t=>CC[KX.has(t.k)?t.k:t.c]||'#94a3b8';
 const wi=n=>ic(/thẻ|bank|ngân|visa/i.test(n)?'card':/momo|zalo|điện tử/i.test(n)?'phone':/mặt|bóp/i.test(n)?'cash':'wallet');
@@ -522,7 +526,7 @@ function render(){
     <h3>Tài sản hiện có${hc?' · '+(plt>=0?'lãi ':'lỗ ')+nf(Math.abs(plt))+'đ':''}</h3>${S.assets.length?`<div class="card">${S.assets.map(a=>{const t=AT[a.type]||AT['Khác'];return `<div class="it" onclick="astM('${a.id}')"><div class="ic" style="background:${t[2]}26;color:${t[2]}">${ic(t[0])}</div><div><b>${esc(a.name)}</b><small>${a.qty} ${esc(a.unit)} × ${nf(apr(a))}đ${a.src?' · vàng '+a.src:''}</small></div><span>${fmt(av(a))}${adel(a)?`<small class="dl ${adel(a)>0?'in':'out'}">${adel(a)>0?'▲':'▼'} ${nf(Math.abs(adel(a)))}đ</small>`:''}${plv(a)!==null?`<small class="dl ${plv(a)>=0?'in':'out'}">${plv(a)>=0?'Lãi':'Lỗ'} ${nf(Math.abs(plv(a)))}đ (${Math.round(Math.abs(plv(a))/(a.qty*a.cost)*100)}%)</small>`:''}</span></div>`}).join('')}</div>`:empty('Chưa có tài sản nào.<br>Ví dụ: vàng 5 chỉ, 1.000 USD…')}
     <button class="add" onclick="astM()">+ Thêm tài sản</button>
     <h3>Cơ cấu tài sản</h3><div class="card">${(()=>{const mix={'Tiền trong ví':wt,'Quỹ mục tiêu':gt,'Phải thu':rc};S.assets.forEach(a=>mix[a.type]=(mix[a.type]||0)+av(a));const me=Object.entries(mix).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
-      return tp>0?donut(me,tp)+me.map(([c,v])=>`<div class="lg" style="margin-bottom:8px"><b><i style="background:${CC[c]||'#94a3b8'}"></i>${esc(c)}</b><span>${fmt(v)} · ${Math.round(v/tp*100)}%</span></div>`).join(''):empty('Chưa có dữ liệu')})()}</div>`;
+      return tp>0?donut(me,tp)+me.map(([c,v])=>`<div class="lg" style="margin-bottom:8px"><b><i style="background:${CC[c]||'#94a3b8'}"></i>${esc(c)}</b><span>${fmt(v)} · ${Math.round(v/tp*100)}%</span></div>`).join(''):empty('Chưa có dữ liệu')})()}</div><div class="vtag">Giao diện v${APP_V} · Máy chủ v${S.v||'?'}</div>`;
   }else if(S.tab==='hist'){
     h=`<div class="srch"><input id="sq" type="search" placeholder="Tìm theo diễn giải, mục, ví…" value="${esc(S.q)}" oninput="S.q=this.value;histList()"></div><div class="chips" style="padding:0 16px">${[['all','Tất cả'],['Chi','Chi'],['Thu','Thu'],['Chuyển','Chuyển ví']].map(([k,l])=>`<button class="chip ${S.f===k?'on':''}" onclick="S.f='${k}';S.g='';S.sg='';render()">${l}</button>`).join('')}</div>${catChips()}<div id="hl"></div>`;
   }else{
@@ -563,7 +567,7 @@ function sheet(){
   $('m').innerHTML=`<div class="ov" onclick="if(event.target===this)closeE()"><div class="sh">
   ${E.edit?'':`<div class="f qa"><input id="qa" placeholder="Gõ nhanh: cơm sườn 45k, lương 10tr, rút 500k…" enterkeyhint="done" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();qaGo()}" onchange="qaGo()"></div>${E.qh?`<div class="qh">${E.qh}</div>`:''}`}
   <div class="seg">${[['Chi','Chi ra',ic('out',16)],['Thu','Thu vào',ic('in',16)],['Chuyển','Chuyển ví',ic('swap',16)]].map(([k,l,i])=>`<button class="${E.k===k?'on':''}" onclick="setK('${k}')">${i} ${l}</button>`).join('')}</div>
-  <div class="amt ${E.k}" id="amt">${E.a?nf(+E.a):'0'}đ</div>
+  <div class="amt ${E.k}" id="amt">${E.a?nf(+E.a):'0'}đ</div><div class="sp" id="asp" style="text-align:center;margin:-6px 0 6px">${E.a?'Đọc là: '+spell(+E.a):''}</div>
   ${tp.length?`<div class="chips">${tp.map((t,i)=>`<button class="chip t" onclick="useT(${i})">${IC[t.c]||''} ${esc(t.n)} · ${nf(t.a)}</button>`).join('')}</div>`:''}
   <div class="kp">${['1','2','3','4','5','6','7','8','9','000','0','⌫'].map(k=>`<button onclick="kp('${k}')">${k}</button>`).join('')}</div>
   ${E.k==='Chuyển'?'':`<div class="lb">Mục</div><div class="cg">${CAT[E.k].map((g,i)=>`<button class="tile ${g===grp(E.c)?'on':''}" style="--c:${CC[g]}" onclick="pickG(${i})"><span>${IC[g]}</span>${g}</button>`).join('')}</div>${((TREE[E.k]||{})[grp(E.c)]||[]).length?`<div class="lb">Chi tiết</div><div class="chips">${TREE[E.k][grp(E.c)].map((c,i)=>`<button class="chip ${c===E.c?'on':''}" onclick="pickS(${i})">${c}</button>`).join('')}</div>`:''}`}
@@ -572,14 +576,24 @@ function sheet(){
   <div class="f"><input type="date" value="${E.d}" oninput="E.d=this.value" aria-label="Ngày"><input id="nt" placeholder="Diễn giải (không bắt buộc)" maxlength="120" value="${esc(E.n)}" oninput="E.n=this.value"></div>
   <button class="save" id="sv" onclick="save()">${E.edit?'Cập nhật giao dịch':'Lưu giao dịch'}</button></div></div>`;
 }
-const modal=x=>$('m').innerHTML=`<div class="ov"><div class="sh">${x}</div></div>`;
+const modal=x=>{$('m').innerHTML=`<div class="ov"><div class="sh">${x}</div></div>`;document.querySelectorAll('#m [data-money]').forEach(fmtIn)};
+function numOf(v){const s=String(v==null?'':v).trim(),d=s.replace(/\D/g,'');return d?(s.startsWith('-')?-1:1)*Number(d):0}
+const mval=id=>{const e=$(id);return e?numOf(e.value):0};
+function spell(n){n=Math.abs(Math.round(n));if(!n)return'';const p=[],t=Math.floor(n/1e9),tr=Math.floor(n%1e9/1e6),ng=Math.floor(n%1e6/1e3),d=n%1e3;
+  if(t)p.push(t+' tỷ');if(tr)p.push(tr+' triệu');if(ng)p.push(ng+' nghìn');if(d)p.push(d+' đồng');return p.join(' ')}
+function fmtIn(el){const raw=el.value,neg=raw.trim().startsWith('-'),d=raw.replace(/\D/g,'').slice(0,13),foc=document.activeElement===el,fe=foc?raw.length-el.selectionStart:0;
+  el.value=(neg?'-':'')+(d?Number(d).toLocaleString('vi-VN'):'');
+  if(foc){const p=Math.max(0,el.value.length-fe);try{el.setSelectionRange(p,p)}catch(e){}}
+  const f=el.closest('.f');if(!f)return;let s=f.nextElementSibling;if(!s||!s.classList.contains('sp')){s=document.createElement('div');s.className='sp';f.after(s)}
+  s.textContent=d?'Đọc là: '+(neg?'âm ':'')+spell(Number(d)):''}
+document.addEventListener('input',e=>{const t=e.target;if(t&&t.dataset&&'money' in t.dataset)fmtIn(t)});
 function forgot(){modal(`<h3 style="margin:4px 0 6px">Khôi phục PIN</h3><p class="hint">Nhập mã khôi phục 10 ký tự bạn đã lưu khi tạo PIN.</p><div class="f"><input id="rc" placeholder="XXXXX-XXXXX" autocapitalize="characters" autocomplete="off"></div><button class="save" onclick="goRec()">Tiếp tục</button><button class="lnk" onclick="closeE()">Hủy</button><p class="hint">Mất mã? Mở Apps Script, chạy hàm <b>resetPin</b>, rồi bấm nút dưới đây để tạo PIN mới.</p><button class="lnk" onclick="closeE();lock(true)">Tôi đã chạy resetPin</button>`)}
 function goRec(){const c=$('rc').value.trim();if(c.replace(/[^A-Za-z0-9]/g,'').length<10)return toast('Mã gồm 10 ký tự');RC=c;closeE();mode='new';first=null;pin='';dots();$('lm').textContent='Tạo PIN mới (4 số)';$('fg').classList.add('hide')}
 function showRec(c){modal(`<h3 style="margin:4px 0 6px">Mã khôi phục PIN</h3><p class="hint">Chép mã này vào nơi an toàn (ghi chú, giấy). Mã chỉ hiện <b>một lần</b>, dùng khi bạn quên PIN.</p><div class="rc">${c.slice(0,5)}-${c.slice(5)}</div><button class="save" onclick="closeE()">Đã chép lại</button>`)}
 function chkRec(){if(S.tk&&S.hasRec===false&&!recAsked&&$('m').innerHTML===''&&!$('app').classList.contains('hide')){recAsked=true;modal(`<h3 style="margin:4px 0 6px">Tạo mã khôi phục PIN</h3><p class="hint">Sổ của bạn chưa có mã khôi phục. Tạo ngay để lỡ quên PIN vẫn lấy lại được.</p><button class="save" onclick="mkRec()">Tạo mã khôi phục</button><button class="lnk" onclick="closeE()">Để sau</button>`)}}
 async function mkRec(){try{const r=await call('api',S.tk,'rec',{month:S.month});if(r.err)return toast(r.err);apply(r);if(r.newRec)showRec(r.newRec);else closeE()}catch(e){toast('Cần có mạng để tạo mã')}}
 function closeE(){$('m').innerHTML=''}
-function kp(k){E.a=k==='⌫'?E.a.slice(0,-1):(E.a+k).replace(/^0+/,'').slice(0,12);$('amt').textContent=(E.a?nf(+E.a):'0')+'đ'}
+function kp(k){E.a=k==='⌫'?E.a.slice(0,-1):(E.a+k).replace(/^0+/,'').slice(0,12);$('amt').textContent=(E.a?nf(+E.a):'0')+'đ';$('asp').textContent=E.a?'Đọc là: '+spell(+E.a):''}
 function useT(i){const t=S.tpl.filter(t=>t.k===E.k)[i];Object.assign(E,{n:t.n,a:String(t.a),c:t.c,w:t.w});sheet()}
 async function save(){
   if(!(+E.a>0))return toast('Nhập số tiền trước nhé');
@@ -607,7 +621,7 @@ window.addEventListener('online',sync);window.addEventListener('offline',render)
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){sync();window._reg&&_reg.update();if(S.tab==='ast'&&S.tk&&(!S.gold||Date.now()-(S.gold.at||0)>90000))goldR(true)}});
 setInterval(()=>{if(S.tk&&S.tab==='ast'&&!document.hidden&&navigator.onLine)goldR(true)},75000);
 (async()=>{
-  pad();S.tk=store.get('tk');
+  pad();$('vl').textContent='v'+APP_V;S.tk=store.get('tk');
   if(!API){API=(prompt('Dán link ứng dụng (đuôi /exec) lấy từ Apps Script:')||'').trim();if(API)store.set('api',API)}
   let c={};try{c=JSON.parse(store.get('c')||'{}')}catch(e){}
   const any=Object.values(c)[0],last=c[S.month]||(any&&{...any,tx:[],month:S.month});
